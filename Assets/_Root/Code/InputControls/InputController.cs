@@ -4,33 +4,23 @@ namespace _Root.Code.InputControls
 {
     public class InputController : IExecutable
     {
-        private HorizontalInputController _horizontalInputController;
-        private VerticalInputController _verticalInputController;
-        private JumpController _jumpController;
+        public HorizontalInputController HorizontalInputController { get; private set; }
+        public VerticalInputController VerticalInputController { get; private set; }
+        public JumpController JumpController { get; private set; }
 
         public InputController()
         {
-            _horizontalInputController = new HorizontalInputController();
-            _verticalInputController = new VerticalInputController();
-            _jumpController = new JumpController();
+            HorizontalInputController = new HorizontalInputController();
+            VerticalInputController = new VerticalInputController();
+            JumpController = new JumpController();
         }
-        public float VerticalInput { get; private set; }
-        public float HorizontalInput { get; private set; }
-        public bool JumpInput { get; private set; }
+       
         
         public void Execute(float deltaTime)
         {
-            VerticalInput = _verticalInputController.GetInput();
-            HorizontalInput = _horizontalInputController.GetInput();
-            var jumpValue = _jumpController.GetInput();
-            if (jumpValue > 0.1)
-            {
-                JumpInput = true;
-            }
-            else
-            {
-                JumpInput = false;
-            }
+            HorizontalInputController.GetInput();
+            VerticalInputController.GetInput();
+            JumpController.GetInput();
         }
     }
 }

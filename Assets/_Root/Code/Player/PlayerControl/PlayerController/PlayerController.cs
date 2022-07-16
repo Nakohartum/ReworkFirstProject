@@ -12,6 +12,7 @@ public class PlayerController : IExecutable
     private float _horizontalValue;
     private float _vertivalValue;
     private CameraController _cameraController;
+    private bool _isJumping;
 
     public PlayerController(PlayerModel playerModel, IPlayerView playerView, InputController inputController, CameraController cameraController)
     {
@@ -19,21 +20,47 @@ public class PlayerController : IExecutable
         _playerView = playerView;
         _inputController = inputController;
         _cameraController = cameraController;
+        inputController.HorizontalInputController.OnAxisChange += HorizontalValueChange;
+        inputController.VerticalInputController.OnAxisChange += VerticalValueChange;
+        inputController.JumpController.OnAxisChange += JumpValueChange;
     }
+
+    private void JumpValueChange(float obj)
+    {
+        var localPos = _playerView.PlayerObject.transform.localPosition;
+        var startRay = new Vector3(localPos.x, localPos.y + 1, localPos.z);
+        Ray ray = new Ray(startRay, Vector3.down);
+        var canJump = Physics.Raycast(ray, out var hit, 1f);
+        _isJumping = obj > 0 && canJump ? true : false;
+    }
+
+    private void VerticalValueChange(float obj)
+    {
+        _vertivalValue = obj;
+    }
+
+    private void HorizontalValueChange(float obj)
+    {
+        _horizontalValue = obj;
+    }
+
     public void Execute(float deltaTime)
     {
         _inputController.Execute(deltaTime);
         _cameraController.Execute(deltaTime);
-        _horizontalValue = _inputController.HorizontalInput;
-        _vertivalValue = _inputController.VerticalInput;
-        if (_inputController.JumpInput)
+        if (_isJumping)
         {
-            _playerView.Rigidbody.AddForce(Vector3.up * _playerModel.JumpPower);
+            _playerView.Rigidbody.AddRelativeForce(Vector3.up * _playerModel.JumpPower);
         }
         if (_playerView.Rigidbody.velocity.magnitude > _playerModel.MovingSpeed)
         {
             return;
         }
         _playerView.Rigidbody.AddRelativeForce(new Vector3(_horizontalValue * _playerModel.MovingSpeed, 0, _vertivalValue * _playerModel.MovingSpeed));
+    }
+
+    public IHealth GetHealth()
+    {
+        return _playerModel.Health;
     }
 }

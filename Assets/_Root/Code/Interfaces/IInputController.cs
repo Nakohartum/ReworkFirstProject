@@ -1,7 +1,11 @@
-﻿namespace _Root.Code.Interfaces
+﻿using System;
+using UnityEngine.Events;
+
+namespace _Root.Code.Interfaces
 {
     public interface IInputController
     {
-        float GetInput();
+        void GetInput();
+        event Action<float> OnAxisChange;
     }
 }

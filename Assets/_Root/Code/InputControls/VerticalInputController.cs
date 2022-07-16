@@ -1,17 +1,18 @@
-﻿using _Root.Code.Interfaces;
+﻿using System;
+using _Root.Code.Interfaces;
 using UnityEngine;
 
 namespace _Root.Code.InputControls
 {
     public class VerticalInputController : IInputController
     {
-        private float _verticalInput;
+        public event Action<float> OnAxisChange = f => { };
 
-
-        public float GetInput()
+        public void GetInput()
         {
-            _verticalInput = Input.GetAxis("Vertical");
-            return _verticalInput;
+            OnAxisChange.Invoke(Input.GetAxis("Vertical"));
         }
+
+        
     }
 }

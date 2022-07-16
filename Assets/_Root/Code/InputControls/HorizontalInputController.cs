@@ -1,15 +1,18 @@
-﻿using _Root.Code.Interfaces;
+﻿using System;
+using _Root.Code.Interfaces;
 using UnityEngine;
 
 namespace _Root.Code.InputControls
 {
     public class HorizontalInputController : IInputController
     {
-        private float _horizontalInput;
-        public float GetInput()
+        public event Action<float> OnAxisChange = f => { };
+
+        public void GetInput()
         {
-            _horizontalInput = Input.GetAxis("Horizontal");
-            return _horizontalInput;
+            OnAxisChange.Invoke(Input.GetAxis("Horizontal"));
         }
+
+        
     }
 }

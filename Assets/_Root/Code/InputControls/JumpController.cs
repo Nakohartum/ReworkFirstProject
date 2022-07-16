@@ -1,15 +1,17 @@
-﻿using _Root.Code.Interfaces;
+﻿using System;
+using _Root.Code.Interfaces;
 using UnityEngine;
 
 namespace _Root.Code.InputControls
 {
     public class JumpController : IInputController
     {
-        private float _jumpPower;
-        public float GetInput()
+        public event Action<float> OnAxisChange = f => { };
+        public void GetInput()
         {
-            _jumpPower = Input.GetAxis("Jump");
-            return _jumpPower;
+            OnAxisChange.Invoke(Input.GetAxis("Jump"));
         }
+
+        
     }
 }
