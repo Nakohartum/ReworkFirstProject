@@ -6,13 +6,13 @@ namespace _Root.Code.InputControls
     {
         public HorizontalInputController HorizontalInputController { get; private set; }
         public VerticalInputController VerticalInputController { get; private set; }
-        public JumpController JumpController { get; private set; }
+        public JumpInputController JumpInputController { get; private set; }
 
         public InputController()
         {
             HorizontalInputController = new HorizontalInputController();
             VerticalInputController = new VerticalInputController();
-            JumpController = new JumpController();
+            JumpInputController = new JumpInputController();
         }
        
         
@@ -20,7 +20,7 @@ namespace _Root.Code.InputControls
         {
             HorizontalInputController.GetInput();
             VerticalInputController.GetInput();
-            JumpController.GetInput();
+            JumpInputController.GetInput();
         }
     }
 }

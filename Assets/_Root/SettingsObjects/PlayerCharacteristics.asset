@@ -12,7 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3dd9d9e8a02faaf40ba1d687caf69226, type: 3}
   m_Name: PlayerCharacteristics
   m_EditorClassIdentifier: 
-  <MaxHealth>k__BackingField: 0
+  <MaxHealth>k__BackingField: 100
   <CurrentHealth>k__BackingField: 0
-  <MovingSpeed>k__BackingField: 0
-  <JumpPower>k__BackingField: 0
+  <MovingSpeed>k__BackingField: 5
+  <JumpPower>k__BackingField: 50
+  <SpawnPosition>k__BackingField: {x: 822.8793, y: 93.432, z: 488.1897}
+  <SpawnObject>k__BackingField: {fileID: 2122176408856358745, guid: 2ba8ffdb07d63f84ab3a7019d218ba82,
+    type: 3}

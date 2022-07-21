@@ -1,66 +1,71 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using _Root.Code.InputControls;
 using _Root.Code.Interfaces;
 using UnityEngine;
 
-public class PlayerController : IExecutable
+namespace _Root.Code.Player.PlayerControl.PlayerController
 {
-    private PlayerModel _playerModel;
-    private IPlayerView _playerView;
-    private InputController _inputController;
-    private float _horizontalValue;
-    private float _vertivalValue;
-    private CameraController _cameraController;
-    private bool _isJumping;
-
-    public PlayerController(PlayerModel playerModel, IPlayerView playerView, InputController inputController, CameraController cameraController)
+    public class PlayerController : IExecutable
     {
-        _playerModel = playerModel;
-        _playerView = playerView;
-        _inputController = inputController;
-        _cameraController = cameraController;
-        inputController.HorizontalInputController.OnAxisChange += HorizontalValueChange;
-        inputController.VerticalInputController.OnAxisChange += VerticalValueChange;
-        inputController.JumpController.OnAxisChange += JumpValueChange;
-    }
+        private PlayerModel _playerModel;
+        private IPlayerView _playerView;
+        private InputController _inputController;
+        private float _horizontalValue;
+        private float _verticalValue;
+        private CameraController _cameraController;
+        private PhysicsMover _physicsMover;
+        private Jumper _jumper;
+        private Transform _lookDirection;
+        private bool _isJumping;
+        private Executables _executables;
 
-    private void JumpValueChange(float obj)
-    {
-        var localPos = _playerView.PlayerObject.transform.localPosition;
-        var startRay = new Vector3(localPos.x, localPos.y + 1, localPos.z);
-        Ray ray = new Ray(startRay, Vector3.down);
-        var canJump = Physics.Raycast(ray, out var hit, 1f);
-        _isJumping = obj > 0 && canJump ? true : false;
-    }
 
-    private void VerticalValueChange(float obj)
-    {
-        _vertivalValue = obj;
-    }
-
-    private void HorizontalValueChange(float obj)
-    {
-        _horizontalValue = obj;
-    }
-
-    public void Execute(float deltaTime)
-    {
-        _inputController.Execute(deltaTime);
-        _cameraController.Execute(deltaTime);
-        if (_isJumping)
+        public PlayerController(PlayerModel playerModel, IPlayerView playerView, InputController inputController, 
+            CameraController cameraController, Transform lookDirection, PhysicsMover physicsMover, Jumper jumper, Executables executables)
         {
-            _playerView.Rigidbody.AddRelativeForce(Vector3.up * _playerModel.JumpPower);
+            _playerModel = playerModel;
+            _playerView = playerView;
+            _inputController = inputController;
+            _cameraController = cameraController;
+            _lookDirection = lookDirection;
+            _physicsMover = physicsMover;
+            _jumper = jumper;
+            _executables = executables;
+            _playerView.OnPlayerDie += ControllerDestroyes;
+            inputController.HorizontalInputController.OnAxisChange += HorizontalValueChange;
+            inputController.VerticalInputController.OnAxisChange += VerticalValueChange;
         }
-        if (_playerView.Rigidbody.velocity.magnitude > _playerModel.MovingSpeed)
-        {
-            return;
-        }
-        _playerView.Rigidbody.AddRelativeForce(new Vector3(_horizontalValue * _playerModel.MovingSpeed, 0, _vertivalValue * _playerModel.MovingSpeed));
-    }
 
-    public IHealth GetHealth()
-    {
-        return _playerModel.Health;
+        private void VerticalValueChange(float obj)
+        {
+            _verticalValue = obj;
+        }
+
+        private void HorizontalValueChange(float obj)
+        {
+            _horizontalValue = obj;
+        }
+
+        public void Execute(float deltaTime)
+        {
+            _inputController.Execute(deltaTime);
+            _cameraController.Execute(deltaTime);
+            var movement = new Vector3(_horizontalValue, 0, _verticalValue) * deltaTime;
+            _physicsMover.Move(movement, _lookDirection.forward);
+            if (Input.GetButtonDown("Jump"))
+            {
+                _jumper.Jump(_playerView.PlayerObject.transform, _playerModel.JumpPower);
+            }
+        }
+
+        public IHealth GetHealth()
+        {
+            return _playerModel.Health;
+        }
+
+        public void ControllerDestroyes()
+        {
+            _executables.RemoveFromExecutables(this);
+        }
     }
 }

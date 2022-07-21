@@ -4,14 +4,13 @@ using UnityEngine;
 
 namespace _Root.Code.InputControls
 {
-    public class JumpController : IInputController
+    public class JumpInputController : IInputController
     {
         public event Action<float> OnAxisChange = f => { };
+
         public void GetInput()
         {
             OnAxisChange.Invoke(Input.GetAxis("Jump"));
         }
-
-        
     }
 }

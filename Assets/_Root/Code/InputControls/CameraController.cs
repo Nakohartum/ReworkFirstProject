@@ -9,7 +9,7 @@ namespace _Root.Code.InputControls
         private const string MouseY = "Mouse Y";
         private const float MinClamp = -50;
         private const float MaxClamp = 50;
-        private Camera _camera;
+        private Transform _lookTransform;
         private float _xRotation;
         private float _currentXRotation;
         private float _yRotation;
@@ -17,9 +17,9 @@ namespace _Root.Code.InputControls
         private IPlayerView _playerView;
         private float _sensitivity;
 
-        public CameraController(IPlayerView playerView, float sensitivity)
+        public CameraController(IPlayerView playerView, Transform lookTransform, float sensitivity)
         {
-            _camera = Camera.main;
+            _lookTransform = lookTransform;
             _playerView = playerView;
             _sensitivity = sensitivity;
         }
@@ -30,7 +30,7 @@ namespace _Root.Code.InputControls
             _xRotation += Input.GetAxis(MouseX) * _sensitivity;
             _yRotation += Input.GetAxis(MouseY) * _sensitivity;
             _yRotation = Mathf.Clamp(_yRotation, MinClamp, MaxClamp);
-            _camera.transform.rotation = Quaternion.Euler(-_yRotation, _xRotation, 0);
+            _lookTransform.rotation = Quaternion.Euler(-_yRotation, _xRotation, 0);
             _playerView.PlayerObject.transform.localRotation = Quaternion.Euler(0f, _xRotation, 0f);
         }
     }

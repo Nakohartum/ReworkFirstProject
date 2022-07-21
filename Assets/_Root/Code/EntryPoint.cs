@@ -10,19 +10,20 @@ namespace _Root.Code
     {
         [SerializeField] private UIController _controller;
         [SerializeField] private GameSettings _gameSettings;
-        private PlayerController _playerController;
+        private Executables _executables = new Executables();
 
         private void Start()
         {
-            IPlayerFactory playerFactory = new PlayerFactory(_gameSettings.PlayerCharacteristics);
-            _playerController = playerFactory.Create();
-            _controller.Init(_playerController.GetHealth());
+            IPlayerFactory playerFactory = new PlayerFactory(_gameSettings.PlayerCharacteristics, _executables);
+            var playerController = playerFactory.Create();
+            _executables.AddToExecutables(playerController);
+            _controller.Init(playerController.GetHealth());
         }
 
         private void Update()
         {
             var deltaTime = Time.deltaTime;
-            _playerController.Execute(deltaTime);
+            _executables.Execute(deltaTime);
         }
     }
 }

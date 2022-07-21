@@ -1,4 +1,6 @@
-﻿namespace _Root.Code.Interfaces
+﻿using System;
+
+namespace _Root.Code.Interfaces
 {
     public interface IExecutable
     {

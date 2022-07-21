@@ -145,6 +145,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Rigidbody>k__BackingField: {fileID: 2122176408856358748}
   <PlayerObject>k__BackingField: {fileID: 2122176408856358745}
+  <Eyes>k__BackingField: {fileID: 2122176408919571220}
 --- !u!54 &2122176408856358748
 Rigidbody:
   m_ObjectHideFlags: 0
