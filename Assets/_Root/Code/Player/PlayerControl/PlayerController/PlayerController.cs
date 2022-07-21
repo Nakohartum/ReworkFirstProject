@@ -1,5 +1,6 @@
 using System;
 using _Root.Code.InputControls;
+using _Root.Code.Interactables;
 using _Root.Code.Interfaces;
 using UnityEngine;
 
@@ -56,11 +57,22 @@ namespace _Root.Code.Player.PlayerControl.PlayerController
             {
                 _jumper.Jump(_playerView.PlayerObject.transform, _playerModel.JumpPower);
             }
-        }
-
-        public IHealth GetHealth()
-        {
-            return _playerModel.Health;
+            Debug.DrawLine(new Vector3(Screen.width / 2, Screen.height / 2, 0), new Vector3(Screen.width / 2, Screen.height / 2, 0) + Vector3.forward * 2, Color.black);
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                Ray ray = _playerView.Eyes.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
+                
+                if (Physics.Raycast(ray, out var hit))
+                {
+                    if (hit.collider!=null)
+                    {
+                        if (hit.collider.gameObject.TryGetTheComponent<IInteractable>(out var res))
+                        {
+                            res.Interact();
+                        }
+                    }
+                }
+            }
         }
 
         public void ControllerDestroyes()

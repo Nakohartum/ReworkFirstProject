@@ -11,18 +11,18 @@ namespace _Root.Code.Player
     {
         private PlayerCharacteristics _playerCharacteristics;
         private Executables _executables;
+        private Health.Health _health;
 
-        public PlayerFactory(PlayerCharacteristics playerCharacteristics, Executables executables)
+        public PlayerFactory(PlayerCharacteristics playerCharacteristics, Executables executables, Health.Health health)
         {
             _playerCharacteristics = playerCharacteristics;
             _executables = executables;
+            _health = health;
         }
         
         public PlayerController Create()
         {
-            IHealth health = new Health.Health(_playerCharacteristics.MaxHealth, 
-                _playerCharacteristics.CurrentHealth);
-            PlayerModel playerModel = new PlayerModel(health, _playerCharacteristics.MovingSpeed,
+            PlayerModel playerModel = new PlayerModel(_health, _playerCharacteristics.MovingSpeed,
                 _playerCharacteristics.JumpPower);
             IPlayerView playerView = Object.Instantiate(_playerCharacteristics.SpawnObject,
                 _playerCharacteristics.SpawnPosition, Quaternion.identity).GetComponent<IPlayerView>();

@@ -14,10 +14,11 @@ namespace _Root.Code
 
         private void Start()
         {
-            IPlayerFactory playerFactory = new PlayerFactory(_gameSettings.PlayerCharacteristics, _executables);
+            var health = new Health.Health(_gameSettings.PlayerCharacteristics.MaxHealth, 0);
+            IPlayerFactory playerFactory = new PlayerFactory(_gameSettings.PlayerCharacteristics, _executables, health);
             var playerController = playerFactory.Create();
             _executables.AddToExecutables(playerController);
-            _controller.Init(playerController.GetHealth());
+            _controller.Init(health);
         }
 
         private void Update()

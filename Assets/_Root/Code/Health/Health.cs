@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace _Root.Code.Health
 {
-    internal sealed class Health : IHealth
+    public sealed class Health : IHealth
     {
         private float _maxHealth;
         private float _currentHealth;
